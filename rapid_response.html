@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rapid Response — Postpartum & Newborn Care</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#f7f4ef;--surface:#ffffff;--surface2:#f0ece4;--border:#e2ddd5;--border2:#ccc8bf;
+  --text:#1e1c18;--muted:#7a7568;--navy:#1a3a5c;--navy-light:#e8f0f8;
+  --teal:#0d6e6e;--teal-light:#e3f4f4;--amber:#b8780a;--amber-light:#fdf3e0;
+  --green:#2d6a2d;--green-light:#e8f5e8;--red:#8b2020;--red-light:#fdeaea;
+  --radius:10px;--radius-lg:16px;--shadow:0 2px 12px rgba(0,0,0,0.08);
+  --font-display:'Playfair Display',serif;--font-body:'Nunito',sans-serif;
+}
+body{font-family:var(--font-body);background:var(--bg);color:var(--text);min-height:100vh;}
+.app{max-width:700px;margin:0 auto;padding:2rem 1rem 4rem;}
+.screen{display:none;}.screen.active{display:block;}
+
+.game-logo{text-align:center;margin-bottom:2rem;}
+.game-logo h1{font-family:var(--font-display);font-size:clamp(2rem,6vw,3rem);color:var(--navy);font-weight:700;line-height:1.1;}
+.game-logo p{font-size:14px;color:var(--muted);margin-top:6px;font-weight:500;}
+
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-bottom:1.25rem;box-shadow:var(--shadow);}
+.card-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);margin-bottom:1rem;}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:11px 22px;font-family:var(--font-body);font-size:14px;font-weight:700;border:1.5px solid;border-radius:var(--radius);cursor:pointer;transition:all 0.15s;}
+.btn:active{transform:scale(0.97);}
+.btn-navy{background:var(--navy);color:#fff;border-color:var(--navy);}
+.btn-navy:hover{background:#142e4a;}
+.btn-teal{background:var(--teal);color:#fff;border-color:var(--teal);}
+.btn-teal:hover{background:#0a5555;}
+.btn-outline{background:transparent;color:var(--navy);border-color:var(--border2);}
+.btn-outline:hover{background:var(--surface2);}
+.btn-ghost{background:transparent;color:var(--muted);border-color:transparent;}
+.btn-ghost:hover{color:var(--text);background:var(--surface2);}
+.btn-lg{padding:14px 32px;font-size:16px;}
+.btn-sm{padding:7px 14px;font-size:12px;}
+.btn-full{width:100%;}
+
+.q-count-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:8px;}
+.q-count-btn{padding:12px;text-align:center;font-family:var(--font-body);font-size:15px;font-weight:700;border:1.5px solid var(--border2);border-radius:var(--radius);background:var(--surface);cursor:pointer;transition:all 0.12s;color:var(--muted);}
+.q-count-btn:hover{border-color:var(--navy);color:var(--navy);}
+.q-count-btn.selected{background:var(--navy-light);border-color:var(--navy);color:var(--navy);}
+
+.cat-grid{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;}
+.cat-btn{padding:6px 12px;font-size:12px;font-weight:700;border:1.5px solid var(--border);border-radius:99px;background:var(--surface);cursor:pointer;transition:all 0.12s;color:var(--muted);}
+.cat-btn.on{background:var(--teal-light);border-color:var(--teal);color:var(--teal);}
+
+.game-topbar{display:flex;align-items:center;gap:12px;margin-bottom:1.25rem;}
+.progress-wrap{flex:1;background:var(--surface2);border-radius:99px;height:8px;}
+.progress-fill{height:8px;border-radius:99px;background:var(--navy);transition:width 0.4s ease;}
+.q-counter{font-size:12px;font-weight:700;color:var(--muted);white-space:nowrap;}
+.score-chip{background:var(--navy-light);color:var(--navy);font-size:13px;font-weight:700;padding:5px 14px;border-radius:99px;white-space:nowrap;}
+
+.q-meta{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
+.badge{display:inline-block;font-size:11px;font-weight:700;padding:3px 10px;border-radius:99px;}
+.badge-teal{background:var(--teal-light);color:var(--teal);}
+.badge-amber{background:var(--amber-light);color:var(--amber);}
+.badge-red{background:var(--red-light);color:var(--red);}
+.badge-navy{background:var(--navy-light);color:var(--navy);}
+
+.q-text{font-size:17px;font-weight:600;line-height:1.55;color:var(--text);margin-bottom:1.25rem;}
+
+.opts{display:grid;gap:10px;margin-bottom:1rem;}
+.opt-btn{padding:13px 16px;font-size:14px;font-family:var(--font-body);font-weight:500;border:1.5px solid var(--border);border-radius:var(--radius);background:var(--surface);color:var(--text);cursor:pointer;text-align:left;line-height:1.4;transition:all 0.12s;}
+.opt-btn:hover:not(:disabled){border-color:var(--navy);background:var(--navy-light);}
+.opt-btn.correct{background:var(--green-light);border-color:var(--green);color:var(--green);font-weight:600;}
+.opt-btn.wrong{background:var(--red-light);border-color:var(--red);color:var(--red);}
+.opt-btn:disabled{cursor:default;}
+
+.rationale-box{padding:14px 16px;border-radius:var(--radius);font-size:14px;line-height:1.65;margin-bottom:1rem;display:none;}
+.rationale-box.show{display:block;}
+.rationale-box.correct{background:var(--green-light);border:1.5px solid var(--green);color:var(--green);}
+.rationale-box.wrong{background:var(--red-light);border:1.5px solid var(--red);color:var(--red);}
+
+.q-actions{display:flex;justify-content:flex-end;margin-top:4px;}
+
+.results-hero{text-align:center;padding:2rem 1rem 1.5rem;}
+.results-pct{font-family:var(--font-display);font-size:6rem;color:var(--navy);font-weight:700;line-height:1;}
+.results-label{font-size:14px;color:var(--muted);font-weight:600;margin-top:4px;}
+.results-grade{font-size:1.3rem;font-weight:700;margin-top:14px;padding:8px 24px;border-radius:99px;display:inline-block;}
+.grade-a{background:var(--green-light);color:var(--green);}
+.grade-b{background:var(--teal-light);color:var(--teal);}
+.grade-c{background:var(--amber-light);color:var(--amber);}
+.grade-d{background:var(--red-light);color:var(--red);}
+
+.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:1.25rem 0;}
+.stat-card{background:var(--surface2);border-radius:var(--radius);padding:14px;text-align:center;}
+.stat-val{font-family:var(--font-display);font-size:2rem;font-weight:700;color:var(--navy);}
+.stat-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-top:2px;}
+
+.personal-best{background:var(--amber-light);border:1.5px solid #e8c070;border-radius:var(--radius);padding:12px 16px;font-size:13px;font-weight:700;color:var(--amber);text-align:center;margin-bottom:1rem;display:none;}
+.personal-best.show{display:block;}
+
+.flex-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+.spacer{flex:1;}
+
+.review-item{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:10px;}
+.review-item.correct-item{border-left:4px solid var(--green);}
+.review-item.wrong-item{border-left:4px solid var(--red);}
+.review-q{font-size:13px;font-weight:700;color:var(--text);margin-bottom:8px;line-height:1.4;}
+.review-your{font-size:12px;color:var(--red);margin-bottom:2px;}
+.review-correct{font-size:12px;color:var(--green);margin-bottom:6px;}
+.review-rationale{font-size:12px;color:var(--muted);line-height:1.6;border-top:1px solid var(--border);padding-top:8px;margin-top:6px;}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- SETUP -->
+<div id="screen-setup" class="screen active">
+  <div class="game-logo">
+    <h1>Rapid Response</h1>
+    <p>Postpartum &amp; Newborn Care — Self-Study Quiz</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Number of Questions</div>
+    <div class="q-count-grid">
+      <div class="q-count-btn" data-val="10" onclick="selectCount(this)">10</div>
+      <div class="q-count-btn selected" data-val="15" onclick="selectCount(this)">15</div>
+      <div class="q-count-btn" data-val="20" onclick="selectCount(this)">20</div>
+      <div class="q-count-btn" data-val="30" onclick="selectCount(this)">All 30</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Categories to Include</div>
+    <div class="cat-grid" id="cat-grid"></div>
+  </div>
+
+  <div class="card" style="background:var(--navy);border-color:var(--navy);">
+    <div style="color:#a8c4e0;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px;">How to Play</div>
+    <div style="color:#d4e6f5;font-size:13px;line-height:1.7;">
+      Answer each question at your own pace. After selecting an answer the correct answer and a full rationale are revealed — read each one carefully. Your score and a complete answer review are available at the end.
+      <br><br>
+      Points: Foundational = 1 pt &nbsp;|&nbsp; Priority = 2 pts &nbsp;|&nbsp; Challenge = 3 pts
+    </div>
+  </div>
+
+  <button class="btn btn-navy btn-lg btn-full" onclick="startGame()">Start Quiz →</button>
+</div>
+
+<!-- GAME -->
+<div id="screen-game" class="screen">
+  <div class="game-topbar">
+    <div class="progress-wrap"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+    <span class="q-counter" id="q-counter">1 / 15</span>
+    <span class="score-chip" id="score-chip">0 pts</span>
+  </div>
+
+  <div class="card" id="question-card">
+    <div class="q-meta" id="q-meta"></div>
+    <div class="q-text" id="q-text"></div>
+    <div class="opts" id="opts"></div>
+    <div class="rationale-box" id="rationale-box"></div>
+    <div class="q-actions" id="q-actions"></div>
+  </div>
+
+  <button class="btn btn-ghost btn-sm" onclick="quitGame()">✕ Quit quiz</button>
+</div>
+
+<!-- RESULTS -->
+<div id="screen-results" class="screen">
+  <div class="game-logo">
+    <h1>Quiz Complete</h1>
+  </div>
+
+  <div class="card">
+    <div class="results-hero">
+      <div class="results-pct" id="results-pct">0%</div>
+      <div class="results-label" id="results-label">0 of 0 correct</div>
+      <div class="results-grade" id="results-grade"></div>
+    </div>
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="stat-val" id="stat-correct">0</div>
+        <div class="stat-label">Correct</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val" id="stat-wrong">0</div>
+        <div class="stat-label">Incorrect</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val" id="stat-pts">0</div>
+        <div class="stat-label">Points</div>
+      </div>
+    </div>
+    <div class="personal-best" id="personal-best"></div>
+    <div class="flex-row">
+      <button class="btn btn-navy" onclick="playAgain()">Play Again</button>
+      <button class="btn btn-outline" onclick="showScreen('screen-setup')">Change Settings</button>
+      <span class="spacer"></span>
+      <button class="btn btn-teal btn-sm" onclick="toggleReview()" id="review-toggle">Review Answers ↓</button>
+    </div>
+  </div>
+
+  <div id="review-section" style="display:none;margin-top:1rem;">
+    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);margin-bottom:10px;padding-left:4px;">Answer Review</div>
+    <div id="review-items"></div>
+  </div>
+</div>
+
+</div>
+<script>
+const ALL_Q=[
+  {cat:"Postpartum Assessment",diff:"essential",q:"A patient is 6 hours postpartum. Her fundus is firm, midline, at the umbilicus, and she has moderate lochia rubra. Which finding is concerning and requires immediate intervention?",opts:["Fundus at the umbilicus","Lochia rubra","HR 58 bpm","Bladder distension with fundus shifted right"],ans:3,r:"A fundus displaced to the right of midline indicates bladder distension. A full bladder prevents uterine contraction and is a leading cause of early postpartum hemorrhage. The nurse should assist the patient to void immediately."},
+  {cat:"Postpartum Assessment",diff:"essential",q:"When assessing lochia on a postpartum patient day 3, you note lochia serosa with a foul odor and the patient has a temperature of 101.5°F. What is the priority nursing action?",opts:["Document as expected transition","Encourage increased fluid intake","Notify the provider","Apply warm compresses to the fundus"],ans:2,r:"Foul-smelling lochia combined with fever are hallmark signs of endometritis (uterine infection). This is a postpartum emergency requiring provider notification and likely antibiotic therapy."},
+  {cat:"Postpartum Assessment",diff:"essential",q:"A postpartum patient reports pain rated 8/10 at the perineum. On inspection, the area lateral to the repair is tense, ecchymotic, and the patient cannot void. What do you suspect?",opts:["Normal postoperative edema","Hematoma formation","Wound dehiscence","Perineal laceration grade II"],ans:1,r:"A hematoma forms when bleeding occurs into soft tissue without external hemorrhage. Key signs are tense, painful, discolored swelling at the perineum. Inability to void may result from pressure. Notify the provider immediately."},
+  {cat:"Postpartum Assessment",diff:"essential",q:"A patient is day 2 postpartum and has chosen not to breastfeed. She reports bilateral breast pain rated 6/10, and her breasts are firm, warm, and engorged. Which nursing intervention is most appropriate?",opts:["Encourage pumping to relieve pressure","Apply warm compresses and massage the breasts","Apply ice packs, wear a supportive bra, and avoid breast stimulation","Administer bromocriptine to suppress lactation"],ans:2,r:"For non-breastfeeding patients, the goal is lactation suppression. Ice packs reduce discomfort and swelling, a supportive bra provides comfort and reduces stimulation, and avoiding any breast stimulation (pumping, warm compresses, massage) prevents further milk production. Bromocriptine was previously used for lactation suppression but is no longer recommended due to serious side effects including stroke and MI."},
+  {cat:"Postpartum Complications",diff:"challenge",q:"A patient presents to the OB clinic 5 days after discharge following an uncomplicated vaginal delivery. She reports a severe headache, visual 'floaters,' and facial swelling that started this morning. Her BP is 158/104. Which is the priority nursing action?",opts:["Reassure her that postpartum swelling and headaches are common and schedule a follow-up in one week","Obtain a urine sample for protein, administer antihypertensive per protocol, and notify the provider immediately","Administer ibuprofen for the headache and recheck BP in 30 minutes","Instruct the patient to go home, rest, and monitor her BP with a home cuff"],ans:1,r:"Postpartum preeclampsia can develop up to 6 weeks after delivery, even in patients with no hypertension during pregnancy or prior to discharge. A BP of 158/104 with severe headache, visual disturbances, and facial edema meets criteria for preeclampsia with severe features. Priority actions are urinalysis for proteinuria, antihypertensive administration per protocol, and immediate provider notification. Postpartum preeclampsia carries risk of seizure (eclampsia) and stroke."},
+  {cat:"Postpartum Hemorrhage",diff:"priority",q:"A patient is 1 hour postpartum. Fundus is boggy at +1 above the umbilicus and lochia is heavy with clots. After vigorous fundal massage, the uterus remains boggy. What is the next priority intervention?",opts:["Continue massaging every 15 minutes","Administer oxytocin per protocol","Encourage breastfeeding only","Administer misoprostol sublingually per protocol"],ans:1,r:"When massage alone does not restore uterine tone, uterotonic medications — starting with oxytocin — are the next step. This addresses the underlying atony causing hemorrhage."},
+  {cat:"Postpartum Hemorrhage",diff:"priority",q:"Estimated blood loss has reached 1,000 mL in a vaginal delivery patient. She is tachycardic and her BP has dropped to 88/52. Which action takes priority?",opts:["Recheck fundal tone and continue uterine massage","Insert two large-bore IVs and begin fluid resuscitation per protocol","Increase the oxytocin infusion rate and reassess in 15 minutes","Place the patient in Trendelenburg position and apply oxygen"],ans:1,r:"This patient is in hypovolemic shock. Immediate large-bore IV access and fluid resuscitation are the priority to restore perfusion. Other interventions (uterotonic agents, calling provider) happen simultaneously but vascular access is the critical first step."},
+  {cat:"Postpartum Hemorrhage",diff:"priority",q:"Oxytocin has failed to control uterine atony following vaginal delivery. Which medication is the appropriate second-line uterotonic, and is CONTRAINDICATED in patients with hypertension?",opts:["Administer misoprostol sublingually per protocol","Administer methylergonovine 0.2 mg IM per protocol","Administer carboprost 250 mcg IM per protocol","Administer tranexamic acid IV per protocol"],ans:1,r:"Methylergonovine is a second-line uterotonic that causes vasoconstriction and is contraindicated in hypertensive patients due to risk of hypertensive crisis. Misoprostol is often used as an alternative. Carboprost is third-line and contraindicated in asthma. Always assess blood pressure before administering methylergonovine."},
+  {cat:"Postpartum Hemorrhage",diff:"priority",q:"Which medication is a second-line uterotonic used for postpartum hemorrhage when oxytocin fails, but is CONTRAINDICATED in patients with hypertension?",opts:["Misoprostol","Methylergonovine","Carboprost","Tranexamic acid"],ans:1,r:"Methylergonovine causes vasoconstriction and is contraindicated in hypertensive patients. Misoprostol is often used instead. Carboprost is contraindicated in asthma. Knowing contraindications is essential for safe medication administration."},
+  {cat:"Postpartum Hemorrhage",diff:"priority",q:"A patient is 3 hours post vaginal delivery with a repaired laceration. The nurse has been monitoring her closely for hemorrhage. Which finding would the nurse identify as the best indicator that the patient's condition is stabilizing?",opts:["The patient reports feeling less anxious and requests to have visitors in the room","Fundus remains firm, lochia has decreased to moderate, and vital signs are trending toward baseline","The patient's pain is controlled with oral analgesics","Urine output is 25 mL over the last hour and skin is warm and dry"],ans:1,r:"Evaluation of hemorrhage stabilization requires objective clinical indicators. A firm fundus confirms uterine tone is maintained, decreasing lochia indicates reduced bleeding, and vital signs trending toward baseline confirm hemodynamic recovery. Subjective findings such as reduced anxiety do not confirm hemorrhage resolution. Urine output of 25 mL/hr remains below the acceptable threshold of 30 mL/hr and would indicate inadequate perfusion rather than stabilization."},
+  {cat:"Postpartum Mental Health",diff:"essential",q:"A patient at her 2-week postpartum visit tearfully says she hasn't slept in days, feels like a terrible mother, and has had fleeting thoughts of harming herself but 'would never act on it.' What is the priority response?",opts:["Reassure her that baby blues are normal","Document and schedule follow-up in 2 weeks","Perform a full depression screening and ensure same-day mental health evaluation","Recommend a support group and call in 30 days"],ans:2,r:"Active suicidal ideation, even 'passive' thoughts, requires same-day evaluation. Postpartum depression with suicidal ideation is a psychiatric emergency. The Edinburgh Postnatal Depression Scale can be used, but the immediate priority is a mental health evaluation."},
+  {cat:"Postpartum Mental Health",diff:"essential",q:"Which of the following best distinguishes postpartum blues from postpartum depression?",opts:["Postpartum blues occurs after day 16 and requires medication","PPD persists beyond 2 weeks with functional impairment","Both require antidepressant therapy","Postpartum blues includes hallucinations"],ans:1,r:"Postpartum blues is a transient emotional response in the first 1-2 weeks, resolving on its own. PPD persists beyond 2 weeks and causes functional impairment. Postpartum psychosis — which may include hallucinations — is a separate, more severe condition."},
+  {cat:"Postpartum Mental Health",diff:"challenge",q:"A new mother reports she has not slept in 4 days, is hearing a voice telling her the baby is 'marked by evil,' and has been hiding sharp objects. What is the immediate action?",opts:["Begin an SSRI and schedule follow-up in one week","Reassure the patient and schedule outpatient follow-up","Do not leave her alone and initiate an immediate psychiatric emergency consult","Refer to outpatient therapy and notify the outpatient provider"],ans:2,r:"Postpartum psychosis is a psychiatric emergency. Hallucinations, command voices, and concealing weapons indicate risk of harm to self or infant. The patient must NOT be left alone. Call for immediate psychiatric intervention. This is a rare but life-threatening condition."},
+  {cat:"Newborn Assessment",diff:"essential",q:"A term newborn at 36 hours of life has a total bilirubin of 14 mg/dL. The infant is breastfeeding poorly and has lost 9% of birth weight. What is the priority action?",opts:["Reassure parents that jaundice is normal","Supplement with formula to increase caloric intake and monitor bilirubin","Begin phototherapy and assess feeding","Discharge with follow-up in 2 weeks"],ans:2,r:"Bilirubin of 14 mg/dL at 36 hours with poor feeding and excessive weight loss indicates pathological jaundice risk. Phototherapy should be initiated based on the AAP nomogram, and feeding must be optimized."},
+  {cat:"Newborn Assessment",diff:"essential",q:"When assessing a newborn's fontanelles, the nurse notes a bulging anterior fontanelle. The newborn is 12 hours old and afebrile. What is the most appropriate action?",opts:["Reassure the parents that fontanelles normally close by 18 months of age","Notify the provider immediately as this may indicate increased intracranial pressure","Document the finding as expected since the fontanelle bulges when the infant is dehydrated","Reassure the parents that this is a normal finding consistent with caput succedaneum"],ans:1,r:"A bulging anterior fontanelle indicates increased intracranial pressure and is always abnormal. It may signal intracranial hemorrhage, meningitis, or hydrocephalus. This requires immediate provider notification. A sunken fontanelle indicates dehydration."},
+  {cat:"Newborn Assessment",diff:"challenge",q:"A newborn has a blood glucose of 38 mg/dL at 30 minutes of life and is jittery with a weak cry. What is the immediate nursing action?",opts:["Recheck glucose in 1 hour","Encourage breastfeeding and recheck in 30 minutes","Provide early feeding (breast or formula) and notify the provider","Administer IV dextrose immediately without attempting oral feeding"],ans:2,r:"For a symptomatic hypoglycemic newborn, early enteral feeding is attempted first if the infant can swallow safely. The provider must be notified. IV dextrose is reserved for infants who cannot feed, are severely symptomatic, or do not respond to oral feeding."},
+  {cat:"Newborn Assessment",diff:"essential",q:"Which newborn vital sign finding requires immediate provider notification?",opts:["Respiratory rate 44 breaths/min","Axillary temperature 98.6°F","Heart rate 90 bpm at rest","Systolic BP 65 mmHg"],ans:2,r:"Normal newborn HR is 120-160 bpm at rest. A resting HR of 90 bpm is bradycardia and requires immediate assessment and provider notification. It may indicate cardiac, metabolic, or sepsis-related etiology."},
+  {cat:"Newborn Assessment",diff:"priority",q:"A 2-day-old newborn has a cephalohematoma. The parents ask about the lump on the baby's head. What should the nurse explain?",opts:["This is a collection of fluid under the scalp that crosses the suture lines and will resolve within a few days","This is a collection of blood between the skull and the periosteum that does not cross suture lines and will resolve on its own over several weeks to months","This is a collection of blood beneath the scalp that crosses the suture lines and requires monitoring for anemia","This is a normal soft tissue swelling from delivery that crosses the suture lines and typically resolves within 72 hours"],ans:1,r:"Cephalohematoma is a subperiosteal blood collection that does NOT cross suture lines. It resolves spontaneously over weeks to months. Caput succedaneum — which DOES cross suture lines — resolves faster."},
+  {cat:"Newborn Assessment",diff:"priority",q:"During a routine assessment of a 24-hour-old newborn, the nurse auscultates a loud harsh murmur at the left sternal border. The infant has an oxygen saturation of 91% on room air and is dusky around the lips. What is the priority nursing action?",opts:["Document the finding and recheck the oxygen saturation at the next scheduled assessment","Notify the provider immediately, apply supplemental oxygen, and prepare for further cardiac evaluation","Reassure the parents that murmurs are common in newborns and typically resolve on their own","Reposition the infant and recheck oxygen saturation in 30 minutes before notifying the provider"],ans:1,r:"A loud harsh murmur combined with oxygen saturation of 91% and central cyanosis (duskiness around the lips) are signs of a potentially serious congenital cardiac defect requiring immediate intervention. Central cyanosis is never a normal finding and indicates inadequate oxygenation. The provider must be notified immediately, supplemental oxygen applied, and the infant prepared for echocardiogram and further evaluation. Delaying notification is unsafe."},
+  {cat:"Newborn Care",diff:"essential",q:"A breastfeeding mother asks how she will know if her newborn is getting enough milk. Which response is most accurate?",opts:["Weigh the baby daily at home","Count at least 6 wet diapers and 3-4 stools per day by day 4","Your baby should sleep 5-6 hours between feedings","If the baby seems satisfied after 10 minutes, supply is adequate"],ans:1,r:"Diaper output is the most reliable home indicator of adequate intake. By day 4, infants should have at least 6 wet diapers and multiple stools per day, indicating sufficient hydration and caloric intake."},
+  {cat:"Newborn Care",diff:"essential",q:"Which statement about safe sleep guidelines is INCORRECT and must be corrected?",opts:["Place baby on their back for every sleep","A firm, flat sleep surface is safest","Co-sleeping in the parents bed reduces SIDS risk if parents are non-smokers","Avoid loose bedding, pillows, and soft toys in the sleep space"],ans:2,r:"Co-sleeping in an adult bed is NOT recommended by the AAP regardless of parental smoking status — it increases the risk of suffocation and SIDS. The ABCs of safe sleep are: Alone, on their Back, in a Crib with no loose items."},
+  {cat:"Newborn Care",diff:"essential",q:"A mother is preparing to bathe her newborn for the first time. Which teaching point is the highest priority?",opts:["Use warm water and mild soap on the entire body","Never leave the infant unattended in or near water","Tub baths are preferred over sponge baths in the first week","Use baby powder to keep the skin dry"],ans:1,r:"Drowning can occur in as little as 1-2 inches of water in seconds. Never leaving a newborn unattended during bathing is the highest safety priority. Until the cord falls off, sponge baths are recommended. Baby powder is no longer recommended due to aspiration risk."},
+  {cat:"Newborn Care",diff:"priority",q:"A 3-hour-old newborn has RR 72, nasal flaring, intercostal retractions, and audible grunting. Temp 98.4°F, HR 158. What is the nurse's priority action?",opts:["Recheck vitals in 30 minutes","Initiate skin-to-skin contact to warm the newborn","Notify the provider immediately and prepare for NICU transfer","Suction the oropharynx and resume routine monitoring"],ans:2,r:"Tachypnea greater than 60, nasal flaring, retractions, and grunting are signs of respiratory distress. Grunting is particularly ominous — it is the newborn's compensatory mechanism to maintain end-expiratory lung volume. Immediate provider notification and likely NICU transfer are required."},
+  {cat:"Maternal-Newborn Pharmacology",diff:"priority",q:"A postpartum patient on magnesium sulfate for pre-eclampsia has RR 10, absent DTRs, and urine output 20 mL/hr. What is the priority action?",opts:["Increase IV fluid rate","Administer calcium gluconate IV","Hold oxytocin infusion","Prepare for blood transfusion"],ans:1,r:"These findings (respiratory depression, absent DTRs, oliguria) are classic signs of magnesium toxicity. Calcium gluconate is the antidote and must be administered immediately. Magnesium is renally cleared — oliguria allows accumulation to toxic levels."},
+  {cat:"Maternal-Newborn Pharmacology",diff:"priority",q:"Which assessment is MOST important before administering methylergonovine to a postpartum patient?",opts:["Lochia amount","Blood pressure","Temperature","Fundal height"],ans:1,r:"Methylergonovine causes vasospasm and can precipitate hypertensive crisis. Blood pressure must be assessed before every dose. It is absolutely contraindicated in patients with hypertension (BP 140/90 or higher)."},
+  {cat:"Maternal-Newborn Pharmacology",diff:"challenge",q:"A newborn born to a mother who received methadone maintenance therapy throughout pregnancy is now 24 hours old. The nurse notes the infant is extremely irritable, has a high-pitched cry, is sneezing frequently, and has a poor feeding pattern. What does the nurse recognize about this presentation and what is the priority action?",opts:["These are expected findings in all newborns — continue routine monitoring and reassure the parents","These findings are consistent with neonatal abstinence syndrome — initiate NAS scoring, notify the provider, and implement non-pharmacologic comfort measures","This infant is showing signs of sepsis — obtain blood cultures and prepare for antibiotic administration","These findings suggest hypoglycemia — check blood glucose and initiate early feeding immediately"],ans:1,r:"Neonatal abstinence syndrome (NAS) occurs when an infant exposed to opioids or other substances in utero experiences withdrawal after birth. Classic signs include high-pitched cry, irritability, poor feeding, sneezing, and tremors. Priority actions are initiating a validated NAS scoring tool, notifying the provider, and beginning non-pharmacologic comfort measures such as swaddling, low stimulation environment, and frequent small feedings."},
+  {cat:"Maternal-Newborn Pharmacology",diff:"challenge",q:"A newborn delivered 20 minutes ago to a mother who received IV morphine 45 minutes before delivery is now limp, apneic, and blue despite stimulation. Ventilation with bag-mask is initiated. Which medication should the nurse anticipate administering?",opts:["Epinephrine IV to stimulate cardiac output","Naloxone IM or IV to reverse opioid-induced respiratory depression","Calcium gluconate IV to treat neonatal hypocalcemia","Dextrose IV to treat neonatal hypoglycemia"],ans:1,r:"Maternal opioid administration within 4 hours of delivery can cause neonatal respiratory depression. Naloxone is an opioid antagonist that rapidly reverses opioid-induced respiratory depression in the newborn. Bag-mask ventilation takes priority while naloxone is prepared. Naloxone should be used with caution in infants of opioid-dependent mothers as it can precipitate acute withdrawal and seizures."},
+  {cat:"Postpartum Complications",diff:"challenge",q:"A patient is day 5 post-C-section with sudden right calf pain, warmth, redness, and now shortness of breath and pleuritic chest pain. What is the priority action?",opts:["Encourage ambulation to reduce DVT risk","Apply warm compress to the leg","Obtain vital signs and notify provider immediately","Obtain an echocardiogram"],ans:2,r:"Sudden onset pleuritic chest pain and shortness of breath in a postpartum patient with signs of DVT is a pulmonary embolism until proven otherwise. This is life-threatening. Immediate provider notification, vital signs, oxygen, and IV access are priorities. Do NOT massage the leg."},
+  {cat:"Postpartum Complications",diff:"challenge",q:"A patient presents to the OB clinic 7 days post-cesarean reporting she felt a 'pop' at her incision earlier that morning. On assessment, the nurse notes a dehisced section of the incision with a loop of bowel visible. The patient is alert and her BP is 118/74. What is the priority nursing action?",opts:["Apply an abdominal binder and transport the patient to the emergency department","Cover the bowel with a sterile saline-moistened dressing, do not attempt to reinsert, and call 911 immediately","Irrigate the wound with normal saline, apply a dry sterile dressing, and notify the surgeon","Place the patient supine, apply direct pressure to the wound, and instruct her to cough and deep breathe"],ans:1,r:"Evisceration is a surgical emergency. The priority is to keep the exposed bowel moist and protected using a sterile saline-moistened dressing — a dry dressing can cause bowel necrosis. The bowel must never be reinserted by the nurse. Because this occurs in a clinic setting, 911 should be called immediately for emergency transport."},
+  {cat:"Postpartum Complications",diff:"challenge",q:"A patient reports a sudden, severe headache 2 hours after epidural removal, day 1 postpartum. No photophobia or fever. What is the most likely cause?",opts:["Preeclampsia with severe features","Post-dural puncture headache","Subarachnoid hemorrhage","Migraine"],ans:1,r:"A positional headache after neuraxial anesthesia suggests post-dural puncture headache from CSF leak. However, a thunderclap headache must first rule out subarachnoid hemorrhage. Absence of fever and photophobia helps differentiate from meningitis. Anesthesia team should evaluate."}
+];
+
+const CATS=[...new Set(ALL_Q.map(q=>q.cat))];
+const DIFF_LABEL={essential:'Foundational',priority:'Priority',challenge:'Challenge'};
+const DIFF_BADGE={essential:'badge-teal',priority:'badge-amber',challenge:'badge-red'};
+const DIFF_PTS={essential:1,priority:2,challenge:3};
+const LETTERS=['A','B','C','D'];
+let selectedCount=15,selectedCats=new Set(CATS),questions=[],currentQ=0,score=0,answered=false,history=[];
+
+function initSetup(){
+  const cg=document.getElementById('cat-grid');
+  cg.innerHTML='';
+  CATS.forEach(c=>{
+    const b=document.createElement('button');
+    b.className='cat-btn on';b.textContent=c;b.dataset.cat=c;
+    b.onclick=()=>toggleCat(c,b);cg.appendChild(b);
+  });
+}
+
+function selectCount(el){
+  document.querySelectorAll('.q-count-btn').forEach(b=>b.classList.remove('selected'));
+  el.classList.add('selected');selectedCount=parseInt(el.dataset.val);
+}
+
+function toggleCat(cat,btn){
+  if(selectedCats.has(cat)){if(selectedCats.size<=1)return;selectedCats.delete(cat);btn.classList.remove('on');}
+  else{selectedCats.add(cat);btn.classList.add('on');}
+}
+
+function startGame(){
+  let pool=ALL_Q.filter(q=>selectedCats.has(q.cat)).sort(()=>Math.random()-0.5);
+  questions=pool.slice(0,Math.min(selectedCount,pool.length));
+  currentQ=0;score=0;history=[];
+  showScreen('screen-game');renderQ();
+}
+
+function renderQ(){
+  if(currentQ>=questions.length){showResults();return;}
+  answered=false;
+  const q=questions[currentQ];
+  const pct=Math.round((currentQ/questions.length)*100);
+  document.getElementById('progress-fill').style.width=pct+'%';
+  document.getElementById('q-counter').textContent=`${currentQ+1} / ${questions.length}`;
+  document.getElementById('score-chip').textContent=`${score} pts`;
+  const pts=DIFF_PTS[q.diff];
+  document.getElementById('q-meta').innerHTML=
+    `<span class="badge ${DIFF_BADGE[q.diff]}">${DIFF_LABEL[q.diff]}</span>
+     <span class="badge badge-navy">${q.cat}</span>
+     <span class="badge badge-navy">${pts} pt${pts>1?'s':''}</span>`;
+  document.getElementById('q-text').textContent=q.q;
+  document.getElementById('opts').innerHTML=q.opts.map((o,i)=>
+    `<button class="opt-btn" onclick="selectOpt(${i})">${LETTERS[i]}. ${o}</button>`).join('');
+  const rb=document.getElementById('rationale-box');
+  rb.className='rationale-box';rb.innerHTML='';
+  document.getElementById('q-actions').innerHTML='';
+}
+
+function selectOpt(idx){
+  if(answered)return;answered=true;
+  const q=questions[currentQ];const correct=idx===q.ans;
+  const pts=DIFF_PTS[q.diff];if(correct)score+=pts;
+  document.querySelectorAll('.opt-btn').forEach((b,i)=>{
+    b.disabled=true;
+    if(i===q.ans)b.classList.add('correct');
+    else if(i===idx&&!correct)b.classList.add('wrong');
+  });
+  const rb=document.getElementById('rationale-box');
+  rb.className=`rationale-box ${correct?'correct':'wrong'} show`;
+  rb.innerHTML=`<strong>${correct?'Correct!':'Incorrect.'}</strong>${correct?' +'+pts+' point'+(pts>1?'s':''):''}  ${q.r}`;
+  history.push({q,chosen:idx,correct});
+  document.getElementById('score-chip').textContent=`${score} pts`;
+  document.getElementById('q-actions').innerHTML=
+    `<button class="btn btn-navy" onclick="nextQ()">${currentQ+1<questions.length?'Next Question →':'See Results →'}</button>`;
+}
+
+function nextQ(){currentQ++;renderQ();}
+function quitGame(){if(confirm('Quit this quiz? Your progress will be lost.'))showScreen('screen-setup');}
+
+function showResults(){
+  showScreen('screen-results');
+  const total=questions.length,correct=history.filter(h=>h.correct).length;
+  const wrong=total-correct,pct=Math.round((correct/total)*100);
+  const maxPts=questions.reduce((s,q)=>s+DIFF_PTS[q.diff],0);
+  document.getElementById('results-pct').textContent=pct+'%';
+  document.getElementById('results-label').textContent=`${correct} of ${total} correct`;
+  document.getElementById('stat-correct').textContent=correct;
+  document.getElementById('stat-wrong').textContent=wrong;
+  document.getElementById('stat-pts').textContent=`${score}/${maxPts}`;
+  const grade=document.getElementById('results-grade');
+  if(pct>=90){grade.textContent='Excellent Work!';grade.className='results-grade grade-a';}
+  else if(pct>=80){grade.textContent='Good Job!';grade.className='results-grade grade-b';}
+  else if(pct>=70){grade.textContent='Keep Studying!';grade.className='results-grade grade-c';}
+  else{grade.textContent='Review Needed';grade.className='results-grade grade-d';}
+  try{
+    const pbKey='rr_personal_best';
+    const prev=JSON.parse(localStorage.getItem(pbKey)||'null');
+    const pb=document.getElementById('personal-best');
+    if(!prev||pct>prev.pct){
+      localStorage.setItem(pbKey,JSON.stringify({pct,score,date:new Date().toLocaleDateString()}));
+      if(prev){pb.textContent=`New Personal Best! Previous best: ${prev.pct}%`;pb.classList.add('show');}
+    } else {
+      pb.textContent=`Your personal best: ${prev.pct}% (${prev.date})`;pb.classList.add('show');
+    }
+  }catch(e){}
+  document.getElementById('review-items').innerHTML=history.map((h,i)=>`
+    <div class="review-item ${h.correct?'correct-item':'wrong-item'}">
+      <div class="review-q">Q${i+1}. ${h.q.q}</div>
+      ${!h.correct?`<div class="review-your">Your answer: ${LETTERS[h.chosen]}. ${h.q.opts[h.chosen]}</div>`:''}
+      <div class="review-correct">Correct: ${LETTERS[h.q.ans]}. ${h.q.opts[h.q.ans]}</div>
+      <div class="review-rationale">${h.q.r}</div>
+    </div>`).join('');
+}
+
+let reviewVisible=false;
+function toggleReview(){
+  reviewVisible=!reviewVisible;
+  document.getElementById('review-section').style.display=reviewVisible?'block':'none';
+  document.getElementById('review-toggle').textContent=reviewVisible?'Hide Review ↑':'Review Answers ↓';
+}
+
+function playAgain(){startGame();}
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');window.scrollTo(0,0);
+}
+
+initSetup();
+</script>
+</body>
+</html>
